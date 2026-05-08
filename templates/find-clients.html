@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Find Clients — NutriTrack{% endblock %}
+{% block content %}
+
+<div class="page-header">
+    <div class="header-copy">
+        <h1 class="page-title">Find clients</h1>
+        <p class="page-subtitle">Accept subscribers who need a professional.</p>
+    </div>
+</div>
+
+<div class="card section-gap">
+    <h2 class="card-title">Unassigned subscribers ({{ unassigned | length }})</h2>
+
+    {% if unassigned %}
+    <div class="client-list">
+        {% for s in unassigned %}
+        <div class="client-row">
+            <div class="client-avatar">{{ s.full_name[0] }}</div>
+            <div class="client-info">
+                <div class="client-name">{{ s.full_name }}</div>
+                <div class="client-meta">
+                    <span class="tag">@{{ s.username }}</span>
+                    {% if s.goal %}
+                        <span class="tag">{{ s.goal.replace('_', ' ').title() }}</span>
+                    {% endif %}
+                </div>
+            </div>
+            <form method="POST" action="{{ url_for('accept_client', subscriber_id=s.id) }}">
+                <button type="submit" class="btn btn-primary btn-sm">Accept</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <p class="empty-state-text">All subscribers have been assigned to a professional.</p>
+    {% endif %}
+</div>
+
+<div class="card section-gap">
+    <h2 class="card-title">Your clients ({{ my_subscribers | length }})</h2>
+
+    {% if my_subscribers %}
+    <div class="client-list">
+        {% for s in my_subscribers %}
+        <div class="client-row">
+            <div class="client-avatar">{{ s.full_name[0] }}</div>
+            <div class="client-info">
+                <div class="client-name">{{ s.full_name }}</div>
+                <div class="client-meta">
+                    <span class="tag">@{{ s.username }}</span>
+                    {% if s.goal %}
+                        <span class="tag">{{ s.goal.replace('_', ' ').title() }}</span>
+                    {% endif %}
+                </div>
+            </div>
+            <a href="{{ url_for('view_client', subscriber_id=s.id) }}" class="btn btn-outline btn-sm">View</a>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <p class="empty-state-text">You haven't accepted any clients yet.</p>
+    {% endif %}
+</div>
+
+{% endblock %}
